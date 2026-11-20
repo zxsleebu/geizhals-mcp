@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "geizhals-mcp"
+version = "0.1.0"
+description = "MCP server for Geizhals products, prices, price history, ratings, deals and categories"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "mcp>=2.3.0,<3",
+    "httpx[http2]>=0.28.1",
+]
+
+[project.scripts]
+geizhals-mcp = "geizhals_mcp_launcher:main"
+
+[tool.hatch.build.targets.wheel]
+# Upstream keeps the server in a top-level main.py and reads
+# <geizhals package>/../data/categories.json, so ship them in that layout
+# and leave upstream's files untouched (keeps the fork easy to rebase).
+only-include = ["main.py", "geizhals", "geizhals_mcp_launcher.py"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"data/categories.json" = "data/categories.json"
